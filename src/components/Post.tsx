@@ -93,12 +93,12 @@ export function Post({ author, content, publishedAt }: IPost) {
       </form>
 
       <div className={styles.commentList}>
-        {comments.map((item, index) => {
+        {comments.map(comment => {
           return (
             <Comment
-              key={index}
+              key={comment}
               author={author}
-              comment={item}
+              comment={comment}
               publishedAt={publishedAt}
             />
           );

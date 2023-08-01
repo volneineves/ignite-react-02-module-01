@@ -50,7 +50,7 @@ export default function App() {
       <div className={styles.wrapper}>
         <Sidebar />
         <main>
-          {posts.map((post) => {
+          {posts.map(post => {
             return (
               <Post
                 key={post.id}
