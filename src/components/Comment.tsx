@@ -1,24 +1,49 @@
 import { ThumbsUp, Trash } from "phosphor-react";
 import styles from "./Comment.module.css";
+import { format, formatDistanceToNow } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
 
-export function Comment() {
+interface IComment {
+  author: {
+    avatarUrl: string;
+    name: string;
+  };
+  comment: string;
+  publishedAt: Date;
+}
+
+export function Comment({author, comment, publishedAt} : IComment) {
+
+  const publishedDateFormatted = format(
+    publishedAt,
+    "d 'de' LLLL 'às' HH:mm'h'",
+    {
+      locale: ptBR,
+    }
+  );
+
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    locale: ptBR,
+    addSuffix: true,
+  });
+
   return (
     <div className={styles.comment}>
-      <img src="https://github.com/volneineves.png" alt="" />
+      <img src={author.avatarUrl} alt="" />
       <div className={styles.commentBox}>
         <div className={styles.commentContent}>
           <header>
             <div className={styles.authorAndTime}>
-              <strong>Volnei Neves</strong>
-              <time title="11 de Maio às 08:13h" dateTime="2022-05-11 08:13:30">
-                Cerca de 1h atrás
+              <strong>{author.name}</strong>
+              <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+                {publishedDateRelativeToNow}
               </time>
             </div>
             <button title="Deletar comentário">
               <Trash size={24} />
             </button>
           </header>
-          <p>Muito bom Devon, parabéns!!</p>
+          <p>{comment}</p>
         </div>
         <footer>
           <button>
