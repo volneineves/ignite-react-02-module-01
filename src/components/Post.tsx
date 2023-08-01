@@ -1,6 +1,6 @@
 import { format, formatDistanceToNow } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Avatar } from "./Avatar";
 import { Comment } from "./Comment";
 import styles from "./Post.module.css";
@@ -41,6 +41,10 @@ export function Post({ author, content, publishedAt }: IPost) {
   const handleNewCommentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setNewCommentText(event.target.value);
   };
+
+  function deleteComment(comment: string) {
+    setComments(comments.filter((item) => item !== comment));
+  }
 
   return (
     <article className={styles.post}>
@@ -93,13 +97,14 @@ export function Post({ author, content, publishedAt }: IPost) {
       </form>
 
       <div className={styles.commentList}>
-        {comments.map(comment => {
+        {comments.map((comment) => {
           return (
             <Comment
               key={comment}
               author={author}
               comment={comment}
               publishedAt={publishedAt}
+              deleteComment={deleteComment}
             />
           );
         })}

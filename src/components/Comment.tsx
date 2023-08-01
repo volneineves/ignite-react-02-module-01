@@ -1,7 +1,7 @@
-import { ThumbsUp, Trash } from "phosphor-react";
-import styles from "./Comment.module.css";
 import { format, formatDistanceToNow } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
+import { ThumbsUp, Trash } from "phosphor-react";
+import styles from "./Comment.module.css";
 
 interface IComment {
   author: {
@@ -10,10 +10,15 @@ interface IComment {
   };
   comment: string;
   publishedAt: Date;
+  onDeleteComment: (comment: string) => void;
 }
 
-export function Comment({author, comment, publishedAt} : IComment) {
-
+export function Comment({
+  author,
+  comment,
+  publishedAt,
+  onDeleteComment,
+}: IComment) {
   const publishedDateFormatted = format(
     publishedAt,
     "d 'de' LLLL 'às' HH:mm'h'",
@@ -27,6 +32,10 @@ export function Comment({author, comment, publishedAt} : IComment) {
     addSuffix: true,
   });
 
+  function handleDeleteComment() {
+    onDeleteComment(comment);
+  }
+
   return (
     <div className={styles.comment}>
       <img src={author.avatarUrl} alt="" />
@@ -35,11 +44,14 @@ export function Comment({author, comment, publishedAt} : IComment) {
           <header>
             <div className={styles.authorAndTime}>
               <strong>{author.name}</strong>
-              <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+              <time
+                title={publishedDateFormatted}
+                dateTime={publishedAt.toISOString()}
+              >
                 {publishedDateRelativeToNow}
               </time>
             </div>
-            <button title="Deletar comentário">
+            <button onClick={handleDeleteComment} title="Deletar comentário">
               <Trash size={24} />
             </button>
           </header>
