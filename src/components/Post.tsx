@@ -16,7 +16,7 @@ interface IPost {
 }
 
 export function Post({ author, content, publishedAt }: IPost) {
-  const [comments, setComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<string[]>(["Post interessante!!"]);
   const [newCommentText, setNewCommentText] = useState<string>("");
 
   const publishedDateFormatted = format(
@@ -39,12 +39,25 @@ export function Post({ author, content, publishedAt }: IPost) {
   };
 
   const handleNewCommentChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    event.target.setCustomValidity("");
     setNewCommentText(event.target.value);
   };
 
-  function deleteComment(comment: string) {
-    setComments(comments.filter((item) => item !== comment));
+  function handleNewCommentInvalid(
+    event: ChangeEvent<HTMLTextAreaElement>
+  ): void {
+    event.target.setCustomValidity("Esse texto é obrigatório");
+    console.log(event.target);
   }
+
+  function deleteComment(commentToDelete: string) {
+    const commentsWithoutDeletedOne = comments.filter((comment) => {
+      return comment !== commentToDelete;
+    });
+    setComments(commentsWithoutDeletedOne);
+  }
+
+  const isNewCommentEmpty = newCommentText.length === 0;
 
   return (
     <article className={styles.post}>
@@ -89,10 +102,14 @@ export function Post({ author, content, publishedAt }: IPost) {
           placeholder="Deixe um comentário"
           value={newCommentText}
           onChange={handleNewCommentChange}
+          onInvalid={handleNewCommentInvalid}
+          required
         />
 
         <footer>
-          <button type="submit">Publicar</button>
+          <button type="submit" disabled={isNewCommentEmpty}>
+            Publicar
+          </button>
         </footer>
       </form>
 
@@ -104,7 +121,7 @@ export function Post({ author, content, publishedAt }: IPost) {
               author={author}
               comment={comment}
               publishedAt={publishedAt}
-              deleteComment={deleteComment}
+              onDeleteComment={deleteComment}
             />
           );
         })}
