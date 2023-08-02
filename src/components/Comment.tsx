@@ -40,7 +40,7 @@ export function Comment({
   }
 
   function handleLikeComment(): void {
-    setLikeCount(likeCount + 1);
+    setLikeCount((state) => state + 1);
   }
 
   return (
